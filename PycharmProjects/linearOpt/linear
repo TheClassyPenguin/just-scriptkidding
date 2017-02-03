@@ -1,0 +1,57 @@
+#import numpy as np
+import pulp
+
+prob = pulp.LpProblem('cost', pulp.LpMinimize)
+
+#Products bought
+productA = pulp.LpVariable('productA',lowBound=0, cat='Integer')
+productB = pulp.LpVariable('productB',lowBound=0, cat='Integer')
+productC = pulp.LpVariable('productC',lowBound=0, cat='Integer')
+
+#Products made in line 1
+productAMadeIn1 = pulp.LpVariable('productAMadeIn1',lowBound=0, cat='Integer')
+productBMadeIn1 = pulp.LpVariable('productBMadeIn1',lowBound=0, cat='Integer')
+productCMadeIn1 = pulp.LpVariable('productCMadeIn1',lowBound=0, cat='Integer')
+
+#Products made in line 2
+productAMadeIn2 = pulp.LpVariable('productAMadeIn2',lowBound=0, cat='Integer')
+productBMadeIn2 = pulp.LpVariable('productBMadeIn2',lowBound=0, cat='Integer')
+productCMadeIn2 = pulp.LpVariable('productCMadeIn2',lowBound=0, cat='Integer')
+
+#Objective function
+
+total_costs = 1.8*productA\
+              + 1.2*productB\
+              + 0.9*productC\
+              + 1.5*productAMadeIn1\
+              + 1.0*productBMadeIn1\
+              + 0.7*productCMadeIn1\
+              + 1.5*productAMadeIn2\
+              + 1.0*productBMadeIn2\
+              + 0.7*productCMadeIn2
+prob += total_costs
+#Restrictions
+
+productionA = productA + productAMadeIn1 + productAMadeIn2
+prob += (productionA == 100)
+productionB = productB + productBMadeIn1 + productBMadeIn2
+prob += (productionB == 100)
+productionC = productC + productCMadeIn1 + productCMadeIn2
+prob += (productionC == 100)
+
+line1 = 4*productAMadeIn1 + 7*productBMadeIn1 + 2*productCMadeIn1
+prob += (line1 <= 40)
+line2 = 5*productAMadeIn2 + 6*productBMadeIn2 + 3*productCMadeIn2
+prob += (line2 <= 40)
+
+#Solving problem
+
+optimization_result = prob.solve()
+
+assert optimization_result == pulp.LpStatusOptimal
+
+for var in(productA, productAMadeIn1, productAMadeIn2,
+           productB, productBMadeIn1, productBMadeIn2,
+           productC, productCMadeIn1, productCMadeIn2):
+    print('Optimal number of {} to produce: {:1.0f}'.format(var.name, var.value()))
+
