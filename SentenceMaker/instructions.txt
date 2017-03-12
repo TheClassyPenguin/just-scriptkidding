@@ -1,0 +1,7 @@
+The following 2 files can be used to generate a random string of words based on the succesion of them in a given text.
+It should be executed as follows:
+
+py SAR_p3_monkey_indexer YOURTEXT.txt YOURTEXT_out.txt
+py SAR_p3_monkey_evolved YOURTEXT_out.txt
+
+Sentences start and end with the special caracter '$' or when the sentence reaches a maximum length of 25. 
