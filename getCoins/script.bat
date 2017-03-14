@@ -1,0 +1,1 @@
+py C:\Users\Skymont\Documents\StartUpCoins\getCoins.py
